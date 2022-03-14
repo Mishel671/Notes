@@ -1,11 +1,11 @@
-package com.notes.ui
+package com.notes.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.notes.databinding.ActivityRootBinding
-import com.notes.ui._base.FragmentNavigator
-import com.notes.ui.list.NoteListFragment
+import com.notes.presentation._base.FragmentNavigator
+import com.notes.presentation.list.NoteListFragment
 
 class RootActivity : AppCompatActivity(), FragmentNavigator {
 
@@ -18,24 +18,23 @@ class RootActivity : AppCompatActivity(), FragmentNavigator {
         setContentView(viewBinding.root)
         supportFragmentManager
             .beginTransaction()
-            .add(
+            .replace(
                 viewBinding.container.id,
-                NoteListFragment()
-            )
+                NoteListFragment.newInstance())
             .commit()
     }
 
     override fun navigateTo(
         fragment: Fragment
     ) {
-        val viewBinding = this.viewBinding ?: return
-        supportFragmentManager
-            .beginTransaction()
-            .replace(
-                viewBinding.container.id,
-                fragment
-            )
-            .commit()
+//        val viewBinding = this.viewBinding ?: return
+//        supportFragmentManager
+//            .beginTransaction()
+//            .replace(
+//                viewBinding.container.id,
+//                fragment
+//            )
+//            .commit()
     }
 
     override fun onBackPressed() {

@@ -1,25 +1,8 @@
-package com.notes.data
+package com.notes.data.database
 
-import androidx.room.Database
-import androidx.room.RoomDatabase
 import androidx.room.TypeConverter
-import androidx.room.TypeConverters
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-
-@Database(
-    entities = [
-        NoteDbo::class
-    ],
-    version = 1,
-    exportSchema = false,
-)
-@TypeConverters(
-    LocalDateTimeConverter::class
-)
-abstract class NoteDatabase : RoomDatabase() {
-    abstract fun noteDao(): NoteDao
-}
 
 class LocalDateTimeConverter {
 
