@@ -1,8 +1,10 @@
 package com.notes.di
 
 import android.app.Application
+import com.notes.presentation.details.NoteDetailsFragment
 import com.notes.presentation.list.NoteListFragment
-import dagger.*
+import dagger.BindsInstance
+import dagger.Component
 
 @ApplicationScope
 @Component(
@@ -11,14 +13,16 @@ import dagger.*
         ViewModelModule::class
     ]
 )
-interface AppComponent {
+interface ApplicationComponent {
 
     fun inject(fragment: NoteListFragment)
+
+    fun inject(fragment: NoteDetailsFragment)
 
     @Component.Factory
     interface Factory {
         fun create(
             @BindsInstance application: Application
-        ): AppComponent
+        ): ApplicationComponent
     }
 }

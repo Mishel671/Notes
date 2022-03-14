@@ -2,6 +2,7 @@ package com.notes.di
 
 import androidx.lifecycle.ViewModel
 import com.notes.di.ViewModelKey
+import com.notes.presentation.details.NoteDetailsViewModel
 import com.notes.presentation.list.NoteListViewModel
 import dagger.Binds
 import dagger.Module
@@ -13,6 +14,8 @@ interface ViewModelModule {
     @Binds
     @IntoMap
     @ViewModelKey(NoteListViewModel::class)
-    fun bindMainViewModel(viewModel: NoteListViewModel): ViewModel
+    fun bindNoteListViewModel(viewModel: NoteListViewModel): ViewModel
+
+
 
 }
