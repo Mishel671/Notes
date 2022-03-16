@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Notes</string>
+    <string name="title">Заголовок</string>
+    <string name="note">Заметка</string>
+    <string name="empty_title">Введите текст заголовка</string>
+    <string name="empty_content">Введите текст </string>
 </resources>
