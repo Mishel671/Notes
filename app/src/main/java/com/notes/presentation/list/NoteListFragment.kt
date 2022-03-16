@@ -2,9 +2,12 @@ package com.notes.presentation.list
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.widget.LinearLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.notes.NoteApp
 import com.notes.databinding.FragmentNoteListBinding
 import com.notes.presentation.ViewModelFactory
@@ -18,7 +21,6 @@ import javax.inject.Inject
 class NoteListFragment : ViewBindingFragment<FragmentNoteListBinding>(
     FragmentNoteListBinding::inflate
 ) {
-
     private val component by lazy {
         (requireActivity().application as NoteApp).component
     }
@@ -27,6 +29,8 @@ class NoteListFragment : ViewBindingFragment<FragmentNoteListBinding>(
     lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var viewModel: NoteListViewModel
+
+    private lateinit var noteListAdapter: NoteListAdapter
 
     override fun onAttach(context: Context) {
         component.inject(this)
@@ -39,17 +43,30 @@ class NoteListFragment : ViewBindingFragment<FragmentNoteListBinding>(
     ) {
         super.onViewBindingCreated(viewBinding, savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory)[NoteListViewModel::class.java]
-        viewBinding.createNoteButton.setOnClickListener {
-            viewModel.onCreateNoteClick()
-        }
+
         setRecyclerView()
         observeViewModel()
+
+        viewBinding.createNoteButton.setOnClickListener {
+            findImplementationOrThrow<FragmentNavigator>()
+                .navigateTo(
+                    NoteDetailsFragment.newInstanceAddItem(),
+                    NoteDetailsFragment.NAME
+                )
+        }
     }
 
-    private fun setRecyclerView(){
-        val adapter = NoteListAdapter()
+    private fun observeViewModel() {
+        viewModel.notes.observe(viewLifecycleOwner) {
+            noteListAdapter.submitList(it)
+            Log.d("ListLog", "$it")
+        }
+    }
+
+    private fun setRecyclerView() {
+        noteListAdapter = NoteListAdapter()
         with(viewBinding!!) {
-            list.adapter = adapter
+            list.adapter = noteListAdapter
             list.addItemDecoration(
                 DividerItemDecoration(
                     requireContext(),
@@ -57,24 +74,48 @@ class NoteListFragment : ViewBindingFragment<FragmentNoteListBinding>(
                 )
             )
         }
-        viewModel.notes.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
-        }
+        setClickListener()
+        setSwipeListener()
     }
 
-    private fun observeViewModel() {
-        viewModel.navigateToNoteCreation.observe(viewLifecycleOwner) {
+
+    private fun setClickListener() {
+        noteListAdapter.onNoteItemClickListener = {
             findImplementationOrThrow<FragmentNavigator>()
                 .navigateTo(
-                    NoteDetailsFragment()
+                    NoteDetailsFragment.newInstanceEditItem(it.id),
+                    NoteDetailsFragment.NAME
                 )
-
         }
     }
 
-    companion object {
-        fun newInstance() = NoteListFragment()
+    private fun setSwipeListener() {
+        val callback = object : ItemTouchHelper.SimpleCallback(
+            0,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ) {
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val item = noteListAdapter.currentList[viewHolder.adapterPosition]
+                viewModel.deleteNoteItem(item)
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(callback)
+        itemTouchHelper.attachToRecyclerView(viewBinding!!.list)
     }
 
+
+    companion object {
+
+        fun newInstance() = NoteListFragment()
+    }
 
 }

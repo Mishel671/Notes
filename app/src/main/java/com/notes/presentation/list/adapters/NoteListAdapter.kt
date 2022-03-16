@@ -8,6 +8,7 @@ import com.notes.domain.NoteItem
 
 class NoteListAdapter : ListAdapter<NoteItem, NoteItemViewHolder>(NoteItemDiffCallback) {
 
+    var onNoteItemClickListener: ((NoteItem) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteItemViewHolder {
         val viewBinding = ListItemNoteBinding.inflate(
@@ -23,10 +24,12 @@ class NoteListAdapter : ListAdapter<NoteItem, NoteItemViewHolder>(NoteItemDiffCa
         val noteItem = getItem(position)
         val viewBinding = holder.viewBinding
         with(viewBinding) {
-            with(noteItem) {
-                titleLabel.text = title
-                contentLabel.text = content
-            }
+                titleLabel.text = noteItem.title
+                contentLabel.text = noteItem.content
+                root.setOnClickListener {
+                    onNoteItemClickListener?.invoke(noteItem)
+                }
+
         }
     }
 

@@ -1,10 +1,12 @@
 package com.notes.presentation
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.notes.databinding.ActivityRootBinding
 import com.notes.presentation._base.FragmentNavigator
+import com.notes.presentation.details.NoteDetailsFragment
 import com.notes.presentation.list.NoteListFragment
 
 class RootActivity : AppCompatActivity(), FragmentNavigator {
@@ -30,7 +32,8 @@ class RootActivity : AppCompatActivity(), FragmentNavigator {
     }
 
     override fun navigateTo(
-        fragment: Fragment
+        fragment: Fragment,
+        addBackStackFragment: String?
     ) {
         val viewBinding = this.viewBinding ?: return
         supportFragmentManager
@@ -39,10 +42,12 @@ class RootActivity : AppCompatActivity(), FragmentNavigator {
                 viewBinding.container.id,
                 fragment
             )
+            .addToBackStack(addBackStackFragment)
             .commit()
     }
 
     override fun onBackPressed() {
+        Log.d("BackLog", "${supportFragmentManager.backStackEntryCount}")
         if (supportFragmentManager.backStackEntryCount > 0) {
             supportFragmentManager.popBackStack()
         } else {

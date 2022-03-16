@@ -1,33 +1,41 @@
 package com.notes.data.repository
 
-import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.notes.data.database.NoteDao
-import com.notes.data.database.NoteDbo
+import com.notes.data.mapper.NoteMapper
 import com.notes.domain.NoteItem
 import com.notes.domain.NoteRepository
 import javax.inject.Inject
 
 class NoteRepositoryImpl @Inject constructor(
-    private val noteDao: NoteDao
+    private val noteDao: NoteDao,
+    private val mapper: NoteMapper
 ) : NoteRepository {
 
     override fun getNoteList(): LiveData<List<NoteItem>> {
         return Transformations.map(
             noteDao.getAll()
         ) {
-            mapListDbToListEntity(it)
+            mapper.mapListDboToListEntity(it)
         }
     }
 
-    private fun mapListDbToListEntity(list: List<NoteDbo>) = list.map {
-        mapDbModelToEntity(it)
+    override suspend fun addNoteItem(noteItem: NoteItem) {
+        noteDao.addNoteItem(mapper.mapEntityToDbo(noteItem))
     }
 
-    private fun mapDbModelToEntity(db: NoteDbo) = NoteItem(
-        id = db.id,
-        title = db.title,
-        content = db.content
-    )
+    override suspend fun editNoteItem(noteItem: NoteItem) {
+        noteDao.addNoteItem(mapper.mapEntityToDbo(noteItem))
+    }
+
+    override suspend fun getNoteItem(noteItemId: Long): NoteItem {
+        val noteDbo = noteDao.getNoteItem(noteItemId)
+        return mapper.mapDboToEntity(noteDbo)
+    }
+
+    override suspend fun deleteNoteItem(noteItem: NoteItem) {
+        noteDao.deleteNoteItem(noteItem.id)
+    }
+
 }

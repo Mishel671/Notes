@@ -16,6 +16,8 @@ interface ViewModelModule {
     @ViewModelKey(NoteListViewModel::class)
     fun bindNoteListViewModel(viewModel: NoteListViewModel): ViewModel
 
-
-
+    @Binds
+    @IntoMap
+    @ViewModelKey(NoteDetailsViewModel::class)
+    fun bindNoteDetailsViewModel(viewModel: NoteDetailsViewModel): ViewModel
 }
