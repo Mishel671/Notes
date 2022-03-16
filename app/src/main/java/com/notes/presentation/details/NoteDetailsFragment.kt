@@ -113,7 +113,7 @@ class NoteDetailsFragment : ViewBindingFragment<FragmentNoteDetailsBinding>(
         screenMode = mode
         if (screenMode == MODE_EDIT) {
             if (!args.containsKey(NOTE_ITEM_ID)) {
-                throw RuntimeException("Param shop item id is absent")
+                throw RuntimeException("Param note item id is absent")
             }
             noteItemId = args.getLong(NOTE_ITEM_ID, NoteItem.UNDEFINED_ID)
         }

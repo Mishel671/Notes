@@ -32,9 +32,9 @@ class NoteDetailsViewModel @Inject constructor(
     val noteItem: LiveData<NoteItem>
         get() = _noteItem
 
-    fun getNoteItem(shopItemId: Long) {
+    fun getNoteItem(noteItemId: Long) {
         viewModelScope.launch {
-            val item = getNoteItemUseCase(shopItemId)
+            val item = getNoteItemUseCase(noteItemId)
             _noteItem.value = item
         }
     }
