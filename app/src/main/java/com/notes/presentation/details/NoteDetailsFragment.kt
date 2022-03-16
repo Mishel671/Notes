@@ -4,6 +4,10 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.notes.NoteApp
 import com.notes.R
@@ -44,36 +48,39 @@ class NoteDetailsFragment : ViewBindingFragment<FragmentNoteDetailsBinding>(
         savedInstanceState: Bundle?
     ) {
         super.onViewBindingCreated(viewBinding, savedInstanceState)
+        setHasOptionsMenu(true)
         viewModel = ViewModelProvider(this, viewModelFactory)[NoteDetailsViewModel::class.java]
         setTextChangeListener()
-        launchRightMode()
+        checkMode()
         observeViewModel()
     }
 
-    private fun launchRightMode() {
-        when (screenMode) {
-            MODE_EDIT -> launchEditMode()
-            MODE_ADD -> launchAddMode()
+    override fun onStart() {
+        super.onStart()
+        setToolbar()
+    }
+
+    private fun checkMode() {
+        if(screenMode == MODE_EDIT){
+            launchEditMode()
         }
     }
 
-    private fun launchAddMode() {
-        viewBinding?.buttonSave?.setOnClickListener {
-            val title = viewBinding?.etTitle?.text.toString()
-            val content = viewBinding?.etContent?.text.toString()
-            viewModel.addNoteItem(title, content)
-        }
-    }
     private fun launchEditMode() {
         viewModel.getNoteItem(noteItemId)
         viewModel.noteItem.observe(viewLifecycleOwner) {
             viewBinding?.etTitle?.setText(it.title)
             viewBinding?.etContent?.setText(it.content)
         }
-        viewBinding?.buttonSave?.setOnClickListener {
-            val title = viewBinding?.etTitle?.text.toString()
-            val content = viewBinding?.etContent?.text.toString()
-            viewModel.editNoteItem(title, content)
+    }
+
+
+    private fun saveNote(){
+        val title = viewBinding?.etTitle?.text.toString()
+        val content = viewBinding?.etContent?.text.toString()
+        when(screenMode){
+            MODE_EDIT -> viewModel.editNoteItem(title, content)
+            MODE_ADD -> viewModel.addNoteItem(title, content)
         }
     }
 
@@ -97,25 +104,6 @@ class NoteDetailsFragment : ViewBindingFragment<FragmentNoteDetailsBinding>(
 
         viewModel.closeScreen.observe(viewLifecycleOwner) {
             requireActivity().onBackPressed()
-        }
-    }
-
-
-    private fun parseParams() {
-        val args = requireArguments()
-        if (!args.containsKey(SCREEN_MODE)) {
-            throw RuntimeException("Param screen mode is absent")
-        }
-        val mode = args.getString(SCREEN_MODE)
-        if (mode != MODE_EDIT && mode != MODE_ADD) {
-            throw RuntimeException("Unknown screen mode $mode")
-        }
-        screenMode = mode
-        if (screenMode == MODE_EDIT) {
-            if (!args.containsKey(NOTE_ITEM_ID)) {
-                throw RuntimeException("Param note item id is absent")
-            }
-            noteItemId = args.getLong(NOTE_ITEM_ID, NoteItem.UNDEFINED_ID)
         }
     }
 
@@ -145,6 +133,48 @@ class NoteDetailsFragment : ViewBindingFragment<FragmentNoteDetailsBinding>(
         })
     }
 
+    private fun setToolbar(){
+        val toolbar = (requireActivity() as AppCompatActivity).supportActionBar
+        with(toolbar!!){
+            title = ""
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowTitleEnabled(false)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.save_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            android.R.id.home -> {
+                requireActivity().onBackPressed()
+            }
+            R.id.btn_save -> {
+                saveNote()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun parseParams() {
+        val args = requireArguments()
+        if (!args.containsKey(SCREEN_MODE)) {
+            throw RuntimeException("Param screen mode is absent")
+        }
+        val mode = args.getString(SCREEN_MODE)
+        if (mode != MODE_EDIT && mode != MODE_ADD) {
+            throw RuntimeException("Unknown screen mode $mode")
+        }
+        screenMode = mode
+        if (screenMode == MODE_EDIT) {
+            if (!args.containsKey(NOTE_ITEM_ID)) {
+                throw RuntimeException("Param note item id is absent")
+            }
+            noteItemId = args.getLong(NOTE_ITEM_ID, NoteItem.UNDEFINED_ID)
+        }
+    }
 
     companion object {
         const val NAME = "NoteDetailsFragment"

@@ -4,11 +4,13 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.notes.NoteApp
+import com.notes.R
 import com.notes.databinding.FragmentNoteListBinding
 import com.notes.presentation.ViewModelFactory
 import com.notes.presentation._base.FragmentNavigator
@@ -54,6 +56,11 @@ class NoteListFragment : ViewBindingFragment<FragmentNoteListBinding>(
                     NoteDetailsFragment.NAME
                 )
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        setToolbar()
     }
 
     private fun observeViewModel() {
@@ -110,6 +117,15 @@ class NoteListFragment : ViewBindingFragment<FragmentNoteListBinding>(
         }
         val itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(viewBinding!!.list)
+    }
+
+    private fun setToolbar(){
+        val toolbar = (requireActivity() as AppCompatActivity).supportActionBar
+        with(toolbar!!){
+            title = getString(R.string.app_name)
+            setDisplayHomeAsUpEnabled(false)
+            setDisplayShowTitleEnabled(true)
+        }
     }
 
 

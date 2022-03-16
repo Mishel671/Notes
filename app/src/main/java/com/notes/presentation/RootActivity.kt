@@ -19,7 +19,7 @@ class RootActivity : AppCompatActivity(), FragmentNavigator {
         val viewBinding = ActivityRootBinding.inflate(layoutInflater)
         this.viewBinding = viewBinding
         setContentView(viewBinding.root)
-
+        setSupportActionBar(viewBinding.toolbar)
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
@@ -30,6 +30,7 @@ class RootActivity : AppCompatActivity(), FragmentNavigator {
                 .commit()
         }
     }
+
 
     override fun navigateTo(
         fragment: Fragment,
