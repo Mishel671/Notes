@@ -2,7 +2,6 @@ package com.notes.presentation.list
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -66,7 +65,6 @@ class NoteListFragment : ViewBindingFragment<FragmentNoteListBinding>(
     private fun observeViewModel() {
         viewModel.notes.observe(viewLifecycleOwner) {
             noteListAdapter.submitList(it)
-            Log.d("ListLog", "$it")
         }
     }
 
@@ -119,18 +117,16 @@ class NoteListFragment : ViewBindingFragment<FragmentNoteListBinding>(
         itemTouchHelper.attachToRecyclerView(viewBinding!!.list)
     }
 
-    private fun setToolbar(){
+    private fun setToolbar() {
         val toolbar = (requireActivity() as AppCompatActivity).supportActionBar
-        with(toolbar!!){
+        with(toolbar!!) {
             title = getString(R.string.app_name)
             setDisplayHomeAsUpEnabled(false)
             setDisplayShowTitleEnabled(true)
         }
     }
 
-
     companion object {
-
         fun newInstance() = NoteListFragment()
     }
 

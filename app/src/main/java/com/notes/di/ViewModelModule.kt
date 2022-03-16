@@ -1,7 +1,6 @@
 package com.notes.di
 
 import androidx.lifecycle.ViewModel
-import com.notes.di.ViewModelKey
 import com.notes.presentation.details.NoteDetailsViewModel
 import com.notes.presentation.list.NoteListViewModel
 import dagger.Binds

@@ -5,5 +5,5 @@ import com.notes.databinding.ListItemNoteBinding
 
 class NoteItemViewHolder(
     val viewBinding: ListItemNoteBinding
-) :RecyclerView.ViewHolder(viewBinding.root) {
+) : RecyclerView.ViewHolder(viewBinding.root) {
 }

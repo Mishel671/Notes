@@ -19,19 +19,16 @@ class NoteListAdapter : ListAdapter<NoteItem, NoteItemViewHolder>(NoteItemDiffCa
         return NoteItemViewHolder(viewBinding)
     }
 
-
     override fun onBindViewHolder(holder: NoteItemViewHolder, position: Int) {
         val noteItem = getItem(position)
         val viewBinding = holder.viewBinding
         with(viewBinding) {
-                titleLabel.text = noteItem.title
-                contentLabel.text = noteItem.content
-                root.setOnClickListener {
-                    onNoteItemClickListener?.invoke(noteItem)
-                }
+            titleLabel.text = noteItem.title
+            contentLabel.text = noteItem.content
+            root.setOnClickListener {
+                onNoteItemClickListener?.invoke(noteItem)
+            }
 
         }
     }
-
-
 }

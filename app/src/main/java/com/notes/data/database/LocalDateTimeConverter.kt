@@ -21,6 +21,4 @@ class LocalDateTimeConverter {
     ): String {
         return dateTimeFormatter.format(localDateTime)
     }
-
-
 }

@@ -1,11 +1,13 @@
 package com.notes.presentation.details
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.notes.domain.*
+import com.notes.domain.AddNoteItemUseCase
+import com.notes.domain.EditNoteItemUseCase
+import com.notes.domain.GetNoteItemUseCase
+import com.notes.domain.NoteItem
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -18,11 +20,11 @@ class NoteDetailsViewModel @Inject constructor(
 
     private val _errorInputTitle = MutableLiveData<Boolean>()
     val errorInputTitle: LiveData<Boolean>
-    get() = _errorInputTitle
+        get() = _errorInputTitle
 
     private val _errorInputContent = MutableLiveData<Boolean>()
     val errorInputContent: LiveData<Boolean>
-    get() = _errorInputContent
+        get() = _errorInputContent
 
     private val _closeScreen = MutableLiveData<Unit>()
     val closeScreen: LiveData<Unit>
@@ -37,10 +39,6 @@ class NoteDetailsViewModel @Inject constructor(
             val item = getNoteItemUseCase(noteItemId)
             _noteItem.value = item
         }
-    }
-
-    init {
-        Log.d("ViewModelLog", "$this")
     }
 
     fun addNoteItem(inputTitle: String?, inputContent: String?) {
@@ -102,7 +100,6 @@ class NoteDetailsViewModel @Inject constructor(
     fun resetErrorInputContent() {
         _errorInputContent.value = false
     }
-
 
     private fun finishWork() {
         _closeScreen.value = Unit

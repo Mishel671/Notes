@@ -61,7 +61,7 @@ class NoteDetailsFragment : ViewBindingFragment<FragmentNoteDetailsBinding>(
     }
 
     private fun checkMode() {
-        if(screenMode == MODE_EDIT){
+        if (screenMode == MODE_EDIT) {
             launchEditMode()
         }
     }
@@ -75,10 +75,10 @@ class NoteDetailsFragment : ViewBindingFragment<FragmentNoteDetailsBinding>(
     }
 
 
-    private fun saveNote(){
+    private fun saveNote() {
         val title = viewBinding?.etTitle?.text.toString()
         val content = viewBinding?.etContent?.text.toString()
-        when(screenMode){
+        when (screenMode) {
             MODE_EDIT -> viewModel.editNoteItem(title, content)
             MODE_ADD -> viewModel.addNoteItem(title, content)
         }
@@ -107,7 +107,6 @@ class NoteDetailsFragment : ViewBindingFragment<FragmentNoteDetailsBinding>(
         }
     }
 
-
     private fun setTextChangeListener() {
         viewBinding?.etTitle?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -133,9 +132,9 @@ class NoteDetailsFragment : ViewBindingFragment<FragmentNoteDetailsBinding>(
         })
     }
 
-    private fun setToolbar(){
+    private fun setToolbar() {
         val toolbar = (requireActivity() as AppCompatActivity).supportActionBar
-        with(toolbar!!){
+        with(toolbar!!) {
             title = ""
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowTitleEnabled(false)
@@ -147,7 +146,7 @@ class NoteDetailsFragment : ViewBindingFragment<FragmentNoteDetailsBinding>(
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
+        when (item.itemId) {
             android.R.id.home -> {
                 requireActivity().onBackPressed()
             }
@@ -178,7 +177,6 @@ class NoteDetailsFragment : ViewBindingFragment<FragmentNoteDetailsBinding>(
 
     companion object {
         const val NAME = "NoteDetailsFragment"
-
         private const val SCREEN_MODE = "extra_mode"
         private const val NOTE_ITEM_ID = "extra_note_item_id"
         private const val MODE_EDIT = "mode_edit"
